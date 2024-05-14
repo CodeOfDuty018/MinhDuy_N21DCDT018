@@ -1,0 +1,122 @@
+#baiTapLonCach1
+def remove_word(dictionary, word):
+    for entry in dictionary:
+        if entry["word"] == word:
+            dictionary.remove(entry)
+            print(f"Removed word '{word}' from the dictionary.")
+            return
+    print(f"Word '{word}' not found in the dictionary.")
+def remove_word(dictionary, word):
+    for entry in dictionary:
+        if entry["word"] == word:
+            dictionary.remove(entry)
+            print(f"Removed word '{word}' from the dictionary.")
+            return
+    print(f"Word '{word}' not found in the dictionary.")
+def lookup_word(dictionary, word):
+    for entry in dictionary:
+        if entry["word"] == word:
+            return entry["meanings"]
+    print(f"Word '{word}' not found in the dictionary.")
+    return None
+import json
+
+# Định nghĩa hàm để thêm một từ vào từ điển
+def add_word(dictionary, word, meanings):
+    new_entry = {
+        "word": word,
+        "meanings": meanings
+    }
+    dictionary.append(new_entry)
+    dictionary.sort(key=lambda x: x["word"])
+    print(f"Đã thêm từ '{word}' vào từ điển.")
+
+# Định nghĩa hàm để xóa một từ khỏi từ điển
+def remove_word(dictionary, word):
+    for entry in dictionary:
+        if entry["word"] == word:
+            dictionary.remove(entry)
+            print(f"Đã xóa từ '{word}' khỏi từ điển.")
+            return
+    print(f"Từ '{word}' không tìm thấy trong từ điển.")
+
+# Định nghĩa hàm để tra cứu một từ trong từ điển
+def lookup_word(dictionary, word):
+    for entry in dictionary:
+        if entry["word"] == word:
+            return entry["meanings"]
+    print(f"Từ '{word}' không tìm thấy trong từ điển.")
+    return None
+
+# Định nghĩa hàm để lưu từ điển vào một tập tin
+def save_dictionary(dictionary, filename):
+    with open(filename, 'w') as file:
+        json.dump(dictionary, file)
+    print(f"Đã lưu từ điển vào tập tin {filename}.")
+
+# Định nghĩa hàm để nạp từ điển từ một tập tin
+def load_dictionary(filename):
+    try:
+        with open(filename, 'r') as file:
+            dictionary = json.load(file)
+        print(f"Đã nạp từ điển từ tập tin {filename}.")
+        return dictionary
+    except FileNotFoundError:
+        print(f"Tập tin {filename} không tìm thấy. Bắt đầu với từ điển trống.")
+        return []
+
+# Định nghĩa hàm chính để hiển thị menu và xử lý nhập từ người dùng
+def main():
+    dictionary = load_dictionary("N21DCDT018_mang.json")
+    
+    while True:
+        print("\nMenu Từ Điển")
+        print("1. Thêm một từ mới")
+        print("2. Xóa một từ")
+        print("3. Tra cứu một từ")
+        print("4. Lưu từ điển vào tập tin")
+        print("5. Nạp từ điển từ tập tin")
+        print("6. Thoát")
+        
+        choice = input("Nhập lựa chọn của bạn: ")
+        
+        if choice == '1':
+            word = input("Nhập từ mới: ")
+            meanings = []
+            num_meanings = int(input("Nhập số lượng nghĩa của từ: "))
+            for _ in range(num_meanings):
+                part_of_speech = input("Nhập loại từ (danh từ, động từ, tính từ, ...): ")
+                definition = input("Nhập nghĩa của từ: ")
+                example = input("Nhập ví dụ: ")
+                meanings.append({
+                    "part_of_speech": part_of_speech,
+                    "definition": definition,
+                    "example": example
+                })
+            add_word(dictionary, word, meanings)
+        
+        elif choice == '2':
+            word = input("Nhập từ cần xóa: ")
+            remove_word(dictionary, word)
+        
+        elif choice == '3':
+            word = input("Nhập từ cần tra cứu: ")
+            meanings = lookup_word(dictionary, word)
+            if meanings:
+                for meaning in meanings:
+                    print(f"{meaning['part_of_speech']}: {meaning['definition']} - Ví dụ: {meaning['example']}")
+        
+        elif choice == '4':
+            save_dictionary(dictionary, "N21DCDT018_mang.json")
+        
+        elif choice == '5':
+            dictionary = load_dictionary("N21DCDT018_mang.json")
+        
+        elif choice == '6':
+            break
+        
+        else:
+            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
+
+if __name__ == "__main__":
+    main()
