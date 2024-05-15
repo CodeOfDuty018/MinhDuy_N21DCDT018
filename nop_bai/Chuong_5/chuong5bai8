@@ -1,0 +1,36 @@
+class TreeNode:
+    def __init__(self, info):
+        self.info = info
+        self.left = None
+        self.right = None
+
+    # Phương thức so sánh hai cây nhị phân
+    def SoSanh(self, cay2):
+        # Sử dụng phương thức đệ quy để so sánh từng nút của cây
+        return self._SoSanhHelper(self, cay2)
+
+    def _SoSanhHelper(self, cay1, cay2):
+        # Nếu cả hai nút đều None, chúng giống nhau
+        if cay1 is None and cay2 is None:
+            return True
+        
+        # Nếu một trong hai nút là None, chúng không giống nhau
+        if cay1 is None or cay2 is None:
+            return False
+        
+        # So sánh giá trị của nút và đệ quy kiểm tra các con của chúng
+        return (cay1.info == cay2.info) and self._SoSanhHelper(cay1.left, cay2.left) and self._SoSanhHelper(cay1.right, cay2.right)
+
+# Ví dụ sử dụng:
+# Tạo cây 1
+cay1 = TreeNode(1)
+cay1.left = TreeNode(2)
+cay1.right = TreeNode(3)
+
+# Tạo cây 2
+cay2 = TreeNode(1)
+cay2.left = TreeNode(2)
+cay2.right = TreeNode(3)
+
+# So sánh hai cây
+print(cay1.SoSanh(cay2))  # Kết quả sẽ là True
