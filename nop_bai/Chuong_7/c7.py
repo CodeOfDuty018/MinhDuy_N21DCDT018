@@ -1,5 +1,5 @@
 
-#nguyen chương 7, chưa check
+#nguyen chương 7, 
 import networkx as nx
 
 class MyGraph:
