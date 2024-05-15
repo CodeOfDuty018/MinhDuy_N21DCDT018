@@ -6,6 +6,7 @@ class SoHang:
 
     def __repr__(self):
         return f"{self.HeSo}x^{self.SoMu}"
+
 class DaThuc:
     def __init__(self):
         self.Head = None
@@ -31,7 +32,7 @@ class DaThuc:
             else:
                 powers[current.SoMu] = current.HeSo
             current = current.KeTiep
-        
+
         self.Head = None
         for p in sorted(powers.keys(), reverse=True):
             if powers[p] != 0:
@@ -91,22 +92,32 @@ dt = DaThuc()
 dt.Them(3, 2)
 dt.Them(5, 1)
 dt.Them(-2, 2)
+print("Đa thức ban đầu:")
+print(dt)
 dt.RutGon()
+print("Đa thức sau khi rút gọn:")
 print(dt)
 
 dt1 = DaThuc()
 dt1.Them(1, 2)
 dt1.Them(2, 1)
+print("Đa thức dt1:")
+print(dt1)
 
 dt2 = DaThuc()
 dt2.Them(3, 2)
 dt2.Them(1, 1)
+print("Đa thức dt2:")
+print(dt2)
 
 dt3 = dt1.Cong(dt2)
+print("Đa thức dt3 (dt1 + dt2):")
 print(dt3)
 
 dt1.DoiDau()
+print("Đa thức dt1 sau khi đổi dấu:")
 print(dt1)
 
 dt4 = dt1.Tich(dt2)
+print("Đa thức dt4 (dt1 * dt2):")
 print(dt4)
