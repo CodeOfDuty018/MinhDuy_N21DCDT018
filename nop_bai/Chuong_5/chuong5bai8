@@ -34,3 +34,60 @@ cay2.right = TreeNode(3)
 
 # So sánh hai cây
 print(cay1.SoSanh(cay2))  # Kết quả sẽ là True
+Bài 9: Phương thức CayCon
+Phương thức này sẽ kiểm tra xem cay2 có phải là cây con của cay1 hay không. Để thực hiện, ta sẽ cần duyệt cây cay1 và kiểm tra tại mỗi nút xem cây con bắt đầu từ nút đó có giống với cay2 hay không.
+
+Dưới đây là mã nguồn chi tiết cho phương thức CayCon:
+
+python
+Copy code
+class TreeNode:
+    def __init__(self, info):
+        self.info = info
+        self.left = None
+        self.right = None
+
+    # Phương thức kiểm tra xem cay2 có phải là cây con của cay1 hay không
+    def CayCon(self, cay2):
+        # Sử dụng phương thức đệ quy để kiểm tra từng nút trong cây
+        return self._CayConHelper(self, cay2)
+
+    def _CayConHelper(self, cay1, cay2):
+        # Nếu cay2 là None, nó luôn là cây con
+        if cay2 is None:
+            return True
+        
+        # Nếu cay1 là None mà cay2 không phải None, cay2 không thể là cây con
+        if cay1 is None:
+            return False
+        
+        # Kiểm tra xem cây con bắt đầu từ nút này có giống với cay2 không
+        if self._SoSanhHelper(cay1, cay2):
+            return True
+
+        # Nếu không, tiếp tục kiểm tra ở các nút con
+        return self._CayConHelper(cay1.left, cay2) or self._CayConHelper(cay1.right, cay2)
+
+    # Phương thức so sánh hai cây nhị phân (đã định nghĩa ở trên)
+    def _SoSanhHelper(self, cay1, cay2):
+        if cay1 is None and cay2 is None:
+            return True
+        if cay1 is None or cay2 is None:
+            return False
+        return (cay1.info == cay2.info) and self._SoSanhHelper(cay1.left, cay2.left) and self._SoSanhHelper(cay1.right, cay2.right)
+
+# Ví dụ sử dụng:
+# Tạo cây chính
+cay1 = TreeNode(1)
+cay1.left = TreeNode(2)
+cay1.right = TreeNode(3)
+cay1.left.left = TreeNode(4)
+cay1.left.right = TreeNode(5)
+
+# Tạo cây con
+cay2 = TreeNode(2)
+cay2.left = TreeNode(4)
+cay2.right = TreeNode(5)
+
+# Kiểm tra cây con
+print(cay1.CayCon(cay2))  # Kết quả sẽ là True
