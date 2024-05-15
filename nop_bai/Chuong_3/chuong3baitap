@@ -1,0 +1,141 @@
+class SoHang:
+    def __init__(self, heso, somu):
+        self.HeSo = heso
+        self.SoMu = somu
+        self.KeTiep = None
+
+    def __repr__(self):
+        return f"{self.HeSo}x^{self.SoMu}"
+
+class DaThuc:
+    def __init__(self):
+        self.Head = None
+
+    def Them(self, heso, somu):
+        new_term = SoHang(heso, somu)
+        if not self.Head:
+            self.Head = new_term
+            self.Head.KeTiep = self.Head  # Tạo vòng tròn
+        else:
+            current = self.Head
+            while current.KeTiep != self.Head:
+                current = current.KeTiep
+            current.KeTiep = new_term
+            new_term.KeTiep = self.Head  # Hoàn thành vòng tròn
+
+    def RutGon(self):
+        if not self.Head:
+            return
+        powers = {}
+        current = self.Head
+        while True:
+            if current.SoMu in powers:
+                powers[current.SoMu] += current.HeSo
+            else:
+                powers[current.SoMu] = current.HeSo
+            current = current.KeTiep
+            if current == self.Head:
+                break
+
+        self.Head = None
+        for p in sorted(powers.keys(), reverse=True):
+            if powers[p] != 0:
+                self.Them(powers[p], p)
+
+    def Cong(self, other):
+        result = DaThuc()
+        current = self.Head
+        while True:
+            result.Them(current.HeSo, current.SoMu)
+            current = current.KeTiep
+            if current == self.Head:
+                break
+        current = other.Head
+        while True:
+            result.Them(current.HeSo, current.SoMu)
+            current = current.KeTiep
+            if current == other.Head:
+                break
+        result.RutGon()
+        return result
+
+    def DoiDau(self):
+        current = self.Head
+        while True:
+            current.HeSo = -current.HeSo
+            current = current.KeTiep
+            if current == self.Head:
+                break
+
+    def Tich(self, other):
+        result = DaThuc()
+        a = self.Head
+        while True:
+            b = other.Head
+            while True:
+                result.Them(a.HeSo * b.HeSo, a.SoMu + b.SoMu)
+                b = b.KeTiep
+                if b == other.Head:
+                    break
+            a = a.KeTiep
+            if a == self.Head:
+                break
+        result.RutGon()
+        return result
+
+    def Chep(self):
+        copy = DaThuc()
+        current = self.Head
+        while True:
+            copy.Them(current.HeSo, current.SoMu)
+            current = current.KeTiep
+            if current == self.Head:
+                break
+        return copy
+
+    def __repr__(self):
+        if not self.Head:
+            return "0"
+        terms = []
+        current = self.Head
+        while True:
+            terms.append(f"{current.HeSo}x^{current.SoMu}")
+            current = current.KeTiep
+            if current == self.Head:
+                break
+        return " + ".join(terms)
+
+# Sử dụng các phương thức
+dt = DaThuc()
+dt.Them(3, 2)
+dt.Them(5, 1)
+dt.Them(-2, 2)
+print("Đa thức ban đầu:")
+print(dt)
+dt.RutGon()
+print("Đa thức sau khi rút gọn:")
+print(dt)
+
+dt1 = DaThuc()
+dt1.Them(1, 2)
+dt1.Them(2, 1)
+print("Đa thức dt1:")
+print(dt1)
+
+dt2 = DaThuc()
+dt2.Them(3, 2)
+dt2.Them(1, 1)
+print("Đa thức dt2:")
+print(dt2)
+
+dt3 = dt1.Cong(dt2)
+print("Đa thức dt3 (dt1 + dt2):")
+print(dt3)
+
+dt1.DoiDau()
+print("Đa thức dt1 sau khi đổi dấu:")
+print(dt1)
+
+dt4 = dt1.Tich(dt2)
+print("Đa thức dt4 (dt1 * dt2):")
+print(dt4)
