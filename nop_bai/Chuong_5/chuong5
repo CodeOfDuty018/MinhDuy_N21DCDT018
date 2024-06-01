@@ -1,0 +1,128 @@
+class TreeNode:
+    def __init__(self, info):
+        self.info = info
+        self.left = None
+        self.right = None
+
+class BinaryTree:
+    def __init__(self, root=None):
+        self.root = root
+
+    # Bài 1: Phương thức trả về số nút của cây
+    def SoNut(self, node):
+        if node is None:
+            return 0
+        return 1 + self.SoNut(node.left) + self.SoNut(node.right)
+
+    # Bài 2: Phương thức trả về chiều cao của cây
+    def ChieuCao(self, node):
+        if node is None:
+            return 0
+        left_height = self.ChieuCao(node.left)
+        right_height = self.ChieuCao(node.right)
+        return 1 + max(left_height, right_height)
+
+    # Bài 3: Phương thức trả về số nút lá của cây
+    def SoNutLa(self, node):
+        if node is None:
+            return 0
+        if node.left is None and node.right is None:
+            return 1
+        return self.SoNutLa(node.left) + self.SoNutLa(node.right)
+
+    # Bài 4: Phương thức trả về số nút trung gian của cây
+    def SoNutTrungGian(self, node):
+        if node is None or (node.left is None and node.right is None):
+            return 0
+        if node.left is None or node.right is None:
+            return 1 + self.SoNutTrungGian(node.left) + self.SoNutTrungGian(node.right)
+        return self.SoNutTrungGian(node.left) + self.SoNutTrungGian(node.right)
+
+    # Bài 5: Phương thức kiểm tra cây có phải là cây BST
+    def KiemTraBST(self, node, left=float('-inf'), right=float('inf')):
+        if node is None:
+            return True
+        if not (left < node.info < right):
+            return False
+        return (self.KiemTraBST(node.left, left, node.info) and
+                self.KiemTraBST(node.right, node.info, right))
+
+    # Bài 6: Phương thức kiểm tra cây có phải là cây AVL
+    def KiemTraAVL(self, node):
+        def height_and_balanced(node):
+            if node is None:
+                return 0, True
+            left_height, left_balanced = height_and_balanced(node.left)
+            right_height, right_balanced = height_and_balanced(node.right)
+            balanced = (left_balanced and right_balanced and
+                        abs(left_height - right_height) <= 1)
+            return max(left_height, right_height) + 1, balanced
+
+        _, is_balanced = height_and_balanced(node)
+        return is_balanced
+
+    # Bài 7: Phương thức trả về một cây mới giống hệt hoàn toàn với cây hiện tại
+    def Chep(self, node):
+        if node is None:
+            return None
+        new_node = TreeNode(node.info)
+        new_node.left = self.Chep(node.left)
+        new_node.right = self.Chep(node.right)
+        return new_node
+
+    # Bài 8: Phương thức so sánh hai cây có giống hệt nhau hay không
+    def SoSanh(self, node1, node2):
+        if node1 is None and node2 is None:
+            return True
+        if node1 is None or node2 is None:
+            return False
+        return (node1.info == node2.info and
+                self.SoSanh(node1.left, node2.left) and
+                self.SoSanh(node1.right, node2.right))
+
+    # Bài 9: Phương thức kiểm tra cây con
+    def CayCon(self, node1, node2):
+        if node2 is None:
+            return True
+        if node1 is None:
+            return False
+        if self.SoSanh(node1, node2):
+            return True
+        return self.CayCon(node1.left, node2) or self.CayCon(node1.right, node2)
+# Tạo cây
+root = TreeNode(10)
+root.left = TreeNode(5)
+root.right = TreeNode(15)
+root.left.left = TreeNode(3)
+root.left.right = TreeNode(7)
+root.right.right = TreeNode(18)
+
+# Khởi tạo cây
+tree = BinaryTree(root)
+
+# Sử dụng các phương thức
+print("Số nút của cây:", tree.SoNut(tree.root))
+print("Chiều cao của cây:", tree.ChieuCao(tree.root))
+print("Số nút lá của cây:", tree.SoNutLa(tree.root))
+print("Số nút trung gian của cây:", tree.SoNutTrungGian(tree.root))
+print("Cây có phải là cây BST không:", tree.KiemTraBST(tree.root))
+print("Cây có phải là cây AVL không:", tree.KiemTraAVL(tree.root))
+
+# Sao chép cây
+copied_tree_root = tree.Chep(tree.root)
+copied_tree = BinaryTree(copied_tree_root)
+print("Sao chép cây thành công:", tree.SoSanh(tree.root, copied_tree.root))
+
+# So sánh hai cây
+tree2_root = TreeNode(10)
+tree2_root.left = TreeNode(5)
+tree2_root.right = TreeNode(15)
+tree2 = BinaryTree(tree2_root)
+print("Hai cây có giống hệt nhau không:", tree.SoSanh(tree.root, tree2.root))
+
+# Kiểm tra cây con
+sub_tree_root = TreeNode(5)
+sub_tree_root.left = TreeNode(3)
+sub_tree_root.right = TreeNode(7)
+sub_tree = BinaryTree(sub_tree_root)
+print("Cây2 có phải là cây con của cây1 không:", tree.CayCon(tree.root, sub_tree.root))
