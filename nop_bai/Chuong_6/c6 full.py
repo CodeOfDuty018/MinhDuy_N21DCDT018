@@ -10,7 +10,7 @@ class ArrayOperations:
       unique_a = set(a)
       unique_b = set(b)
       diff = sorted(unique_a - unique_b)
-      return diff
+      return set(diff)
 
   @staticmethod
   def Giao(a, b):
