@@ -1,0 +1,66 @@
+class Node:
+    def __init__(self, info):
+        self.info = info
+        self.left = None
+        self.right = None
+
+class BinaryTree:
+    def __init__(self):
+        self.root = None
+
+    def _count_nodes(self, node):
+        if not node:
+            return 0
+        return 1 + self._count_nodes(node.left) + self._count_nodes(node.right)
+
+    def _is_balanced(self, node):
+        if not node:
+            return True, 0
+
+        left_balanced, left_count = self._is_balanced(node.left)
+        right_balanced, right_count = self._is_balanced(node.right)
+
+        current_balanced = abs(left_count - right_count) <= 1
+
+        return left_balanced and right_balanced and current_balanced, 1 + max(left_count, right_count)
+
+    def CanBangHoanToan(self):
+        balanced, _ = self._is_balanced(self.root)
+        return balanced
+
+    def _is_sequential_search_tree(self, node):
+        if not node:
+            return True
+
+        if node.left and node.right:
+            return False
+
+        left_check = self._is_sequential_search_tree(node.left)
+        right_check = self._is_sequential_search_tree(node.right)
+
+        return left_check and right_check
+
+    def BSTTuanTu(self):
+        return self._is_sequential_search_tree(self.root)
+
+# Ví dụ sử dụng:
+# Tạo cây nhị phân
+bt = BinaryTree()
+bt.root = Node(10)
+bt.root.left = Node(5)
+bt.root.right = Node(15)
+bt.root.left.left = Node(2)
+bt.root.left.right = Node(7)
+bt.root.right.right = Node(20)
+
+# Kiểm tra cây có cân bằng hoàn toàn hay không
+print("Cây cân bằng hoàn toàn:", bt.CanBangHoanToan())
+
+# Tạo cây nhị phân tìm kiếm tuần tự
+bst_seq = BinaryTree()
+bst_seq.root = Node(10)
+bst_seq.root.right = Node(20)
+bst_seq.root.right.right = Node(30)
+
+# Kiểm tra cây BST có phải tìm kiếm tuần tự hay không
+print("Cây BST tìm kiếm tuần tự:", bst_seq.BSTTuanTu())
